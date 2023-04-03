@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using API.Data;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
@@ -9,14 +10,17 @@ namespace API.Controllers;
 [Route("[controller]")]
 public class TutorController : ControllerBase
 {
-    private static List<Tutor> tutores = new List<Tutor>();
-    private static int id = 0;
+    private TutorContext _context;
+    public TutorController(TutorContext context)
+    {
+        _context = context;
+    }
 
     [HttpPost]
     public IActionResult AdicionaTutor([FromBody] Tutor tutor)
     {
-        tutor.Id = id++;
-        tutores.Add(tutor);
+        _context.Tutores.Add(tutor);
+        _context.SaveChanges();
         return CreatedAtAction(nameof(RecuperaTutorPorId), new {id = tutor.Id}, tutor);
 
     }
@@ -25,14 +29,14 @@ public class TutorController : ControllerBase
     [HttpGet]
     public IEnumerable<Tutor> RecuperaTutores()
     {
-        return tutores;
+        return _context.Tutores;
     }
 
 
     [HttpGet("{id}")]
     public IActionResult RecuperaTutorPorId(int id)
     {
-        var tutor = tutores.FirstOrDefault(tutor => tutor.Id == id);
+        var tutor = _context.Tutores.FirstOrDefault(tutor => tutor.Id == id);
         if (tutor == null) return NotFound();
         return Ok(tutor);
     }
