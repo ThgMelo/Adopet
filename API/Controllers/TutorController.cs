@@ -15,4 +15,11 @@ public class TutorController : ControllerBase
         Console.WriteLine(tutor.Nome);
         Console.WriteLine(tutor.Email); ;
     }
+
+
+    [HttpGet]
+    public IEnumerable<Tutor> RecuperaTutores()
+    {
+        return tutores;
+    }
 }
