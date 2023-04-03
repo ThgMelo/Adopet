@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
 
 namespace API.Controllers;
@@ -12,12 +13,12 @@ public class TutorController : ControllerBase
     private static int id = 0;
 
     [HttpPost]
-    public void AdicionaTutor(Tutor tutor)
+    public IActionResult AdicionaTutor([FromBody] Tutor tutor)
     {
         tutor.Id = id++;
         tutores.Add(tutor);
-        Console.WriteLine(tutor.Nome);
-        Console.WriteLine(tutor.Email); ;
+        return CreatedAtAction(nameof(RecuperaTutorPorId), new {id = tutor.Id}, tutor);
+
     }
 
 
@@ -29,8 +30,10 @@ public class TutorController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public Tutor? RecuperaTutorPorId(int id)
+    public IActionResult RecuperaTutorPorId(int id)
     {
-        return tutores.FirstOrDefault(tutor => tutor.Id == id);
+        var tutor = tutores.FirstOrDefault(tutor => tutor.Id == id);
+        if (tutor == null) return NotFound();
+        return Ok(tutor);
     }
 }
