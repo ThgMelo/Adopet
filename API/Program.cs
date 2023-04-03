@@ -1,4 +1,11 @@
+using API.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+var connectionString = builder.Configuration.GetConnectionString("AdopetConnection");
+builder.Services.AddDbContext<TutorContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Add services to the container.
 
