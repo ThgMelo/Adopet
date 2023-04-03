@@ -4,6 +4,9 @@ namespace API.Models;
 
 public class Tutor
 {
+
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "O nome do tutor é obrigatório")]
     public string Nome { get; set; }
 
