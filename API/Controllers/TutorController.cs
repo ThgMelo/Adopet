@@ -76,4 +76,15 @@ public class TutorController : ControllerBase
         _context.SaveChanges();
         return NoContent();
     }
+
+
+    [HttpDelete("{id}")]
+    public IActionResult DeletaTutor(int id)
+    {
+        var tutor = _context.Tutores.FirstOrDefault(tutor => tutor.Id == id);
+        if (tutor == null) return NotFound();
+        _context.Remove(tutor);
+        _context.SaveChanges();
+        return NoContent();
+    }
 }
