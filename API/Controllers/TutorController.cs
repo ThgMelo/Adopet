@@ -1,5 +1,7 @@
 ﻿using API.Data;
+using API.Data.Dtos;
 using API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
@@ -11,14 +13,17 @@ namespace API.Controllers;
 public class TutorController : ControllerBase
 {
     private TutorContext _context;
-    public TutorController(TutorContext context)
+    private IMapper _mapper;
+    public TutorController(TutorContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public IActionResult AdicionaTutor([FromBody] Tutor tutor)
+    public IActionResult AdicionaTutor([FromBody] CreateTutorDto tutorDto)
     {
+        Tutor tutor = _mapper.Map<Tutor>(tutorDto);
         _context.Tutores.Add(tutor);
         _context.SaveChanges();
         return CreatedAtAction(nameof(RecuperaTutorPorId), new {id = tutor.Id}, tutor);
