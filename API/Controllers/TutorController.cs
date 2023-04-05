@@ -33,9 +33,9 @@ public class TutorController : ControllerBase
 
 
     [HttpGet]
-    public IEnumerable<Tutor> RecuperaTutores()
+    public IEnumerable<ReadTutorDto> RecuperaTutores()
     {
-        return _context.Tutores;
+        return _mapper.Map<List<ReadTutorDto>>(_context.Tutores);
     }
 
 
@@ -44,7 +44,8 @@ public class TutorController : ControllerBase
     {
         var tutor = _context.Tutores.FirstOrDefault(tutor => tutor.Id == id);
         if (tutor == null) return NotFound();
-        return Ok(tutor);
+        var tutorDto = _mapper.Map<ReadTutorDto>(tutor);
+        return Ok(tutorDto);
     }
 
 
