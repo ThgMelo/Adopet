@@ -10,5 +10,6 @@ public class TutorProfile : Profile
     {
         CreateMap<CreateTutorDto, Tutor>();
         CreateMap<UpdateTutorDto, Tutor>();
+        CreateMap<Tutor, UpdateTutorDto>();
     }
 }

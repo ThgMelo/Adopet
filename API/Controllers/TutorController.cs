@@ -2,6 +2,7 @@
 using API.Data.Dtos;
 using API.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Immutable;
@@ -53,6 +54,25 @@ public class TutorController : ControllerBase
         var tutor = _context.Tutores.FirstOrDefault(tutor => tutor.Id == id);
         if (tutor == null) return NotFound();
         _mapper.Map(tutorDto, tutor);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
+
+    [HttpPatch("{id}")]
+    public IActionResult AtualizaTutorParcial(int id, JsonPatchDocument<UpdateTutorDto> patch) 
+    {
+        var tutor = _context.Tutores.FirstOrDefault(tutor => tutor.Id == id);
+        if (tutor == null) return NotFound();
+        var tutorParaAtualizar = _mapper.Map<UpdateTutorDto>(tutor);
+        patch.ApplyTo(tutorParaAtualizar, ModelState);
+
+        if(!TryValidateModel(tutorParaAtualizar))
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        _mapper.Map(tutorParaAtualizar, tutor);
         _context.SaveChanges();
         return NoContent();
     }
