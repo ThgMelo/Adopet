@@ -9,5 +9,6 @@ public class TutorProfile : Profile
     public TutorProfile()
     {
         CreateMap<CreateTutorDto, Tutor>();
+        CreateMap<UpdateTutorDto, Tutor>();
     }
 }
